@@ -5,6 +5,18 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>f2554ef7-b9b5-47b5-a398-87180b177be5</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+    <PackageReference Include="MailKit" Version="4.14.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Templates\Emails\WillhabenScrapEmail.html" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
 </Project>

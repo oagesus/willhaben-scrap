@@ -1,0 +1,7 @@
+services:
+  willhaben-scrap:
+    image: oagesus/willhaben-scrap:latest
+    build: .
+    env_file:
+      - .env
+    restart: unless-stopped
