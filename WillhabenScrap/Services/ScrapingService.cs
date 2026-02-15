@@ -13,6 +13,7 @@ public class ScrapingService
     private const int DelayBetweenRegionsMaxMs = 5000;
     private const int DelayBetweenPagesMinMs = 1500; // Delay between scraping each page within a region (ms)
     private const int DelayBetweenPagesMaxMs = 3000;
+    private const bool ExcludeRentals = true; // Skip rental listings (OWNAGETYPE = "Miete")
 
     private static readonly string[] RegionUrls =
     [
@@ -144,6 +145,7 @@ public class ScrapingService
         foreach (var ad in advertSummary.EnumerateArray())
         {
             if (!IsPrivateListing(ad)) continue;
+            if (ExcludeRentals && IsRentalListing(ad)) continue;
 
             var listing = ParseListing(ad);
             if (listing != null)
@@ -157,6 +159,12 @@ public class ScrapingService
     {
         var attrValue = GetAttributeValue(ad, "ISPRIVATE");
         return attrValue == "1";
+    }
+
+    private static bool IsRentalListing(JsonElement ad)
+    {
+        var ownageType = GetAttributeValue(ad, "OWNAGETYPE");
+        return ownageType == "Miete";
     }
 
     private static Listing? ParseListing(JsonElement ad)
