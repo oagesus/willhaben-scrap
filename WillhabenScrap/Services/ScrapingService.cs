@@ -13,7 +13,27 @@ public class ScrapingService
     private const int DelayBetweenRegionsMaxMs = 5000;
     private const int DelayBetweenPagesMinMs = 1500; // Delay between scraping each page within a region (ms)
     private const int DelayBetweenPagesMaxMs = 3000;
-    private const bool ExcludeRentals = true; // Skip rental listings (OWNAGETYPE = "Miete")
+    private const bool ExcludeRentals = false; // Skip rental listings
+    private const bool ExcludeCommercial = true; // Skip commercial property types
+    private const bool ExcludeProperties = true; // Skip land/property listings
+    private const bool OnlyPrivateListings = true; // Only show private sellers
+
+    private static readonly string[] CommercialPropertyTypes =
+    [
+        "Geschäfts-/Ladenlokal",
+        "Büro/Ordination",
+        "Gastronomie",
+        "Lagerhalle",
+        "Werkstatt"
+    ];
+
+    private static readonly string[] PropertyTypes =
+    [
+        "Grundstück",
+        "Baugrundstück",
+        "Gewerbegrundstück",
+        "Land-/Forstwirtschaft"
+    ];
 
     private static readonly string[] RegionUrls =
     [
@@ -144,8 +164,10 @@ public class ScrapingService
 
         foreach (var ad in advertSummary.EnumerateArray())
         {
-            if (!IsPrivateListing(ad)) continue;
+            if (OnlyPrivateListings && !IsPrivateListing(ad)) continue;
             if (ExcludeRentals && IsRentalListing(ad)) continue;
+            if (ExcludeCommercial && IsCommercialListing(ad)) continue;
+            if (ExcludeProperties && IsPropertyListing(ad)) continue;
 
             var listing = ParseListing(ad);
             if (listing != null)
@@ -165,6 +187,18 @@ public class ScrapingService
     {
         var ownageType = GetAttributeValue(ad, "OWNAGETYPE");
         return ownageType == "Miete";
+    }
+
+    private static bool IsCommercialListing(JsonElement ad)
+    {
+        var propertyType = GetAttributeValue(ad, "PROPERTY_TYPE");
+        return propertyType != null && CommercialPropertyTypes.Contains(propertyType);
+    }
+
+    private static bool IsPropertyListing(JsonElement ad)
+    {
+        var propertyType = GetAttributeValue(ad, "PROPERTY_TYPE");
+        return propertyType != null && PropertyTypes.Contains(propertyType);
     }
 
     private static Listing? ParseListing(JsonElement ad)
