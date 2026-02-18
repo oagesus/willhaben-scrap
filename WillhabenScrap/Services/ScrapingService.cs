@@ -13,9 +13,9 @@ public class ScrapingService
     private const int DelayBetweenRegionsMaxMs = 5000;
     private const int DelayBetweenPagesMinMs = 1500; // Delay between scraping each page within a region (ms)
     private const int DelayBetweenPagesMaxMs = 3000;
-    private const bool ExcludeRentals = false; // Skip rental listings
+    private const bool ExcludeRentals = true; // Skip rental listings
     private const bool ExcludeCommercial = true; // Skip commercial property types
-    private const bool ExcludeProperties = true; // Skip land/property listings
+    private const bool ExcludeProperties = false; // Skip land/property listings
     private const bool OnlyPrivateListings = true; // Only show private sellers
 
     private static readonly string[] CommercialPropertyTypes =
